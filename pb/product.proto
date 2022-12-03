@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package product;
+option go_package = ".;proto";
+
+import "google/protobuf/timestamp.proto";
+
+service ProductService {
+  rpc GetProduct (GetProductRequest) returns (Product) {}
+  rpc AddProduct (AddProductRequest) returns (Product) {}
+  rpc UpdateProduct (UpdateProductRequest) returns (Product) {}
+  rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse) {}
+}
+
+message Product {
+  string id = 1;
+  string title = 2;
+  string price = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message AddProductRequest {
+  string title = 1;
+  string price = 2;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  string title = 2;
+  string price = 3;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message DeleteProductResponse {
+  bool deleted = 1;
+}

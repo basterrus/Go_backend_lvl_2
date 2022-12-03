@@ -1,0 +1,73 @@
+version: '2.4'
+
+services:
+  rest:
+    build:
+      context: .
+      dockerfile: ./ops/restapi/Dockerfile
+      target: develop
+    container_name: backend2_lesson9_rest
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_URL: "postgresql://gopher:password@postgres:5432/gopher_youtube?sslmode=disable"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+
+  grpc:
+    build:
+      context: .
+      dockerfile: ./ops/restapi/Dockerfile
+      target: develop
+    container_name: backend2_lesson9_grpc
+    ports:
+      - "50051:50051"
+    environment:
+      POSTGRES_URL: "postgresql://gopher:password@postgres:5432/gopher_youtube?sslmode=disable"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+
+  postgres:
+    image: postgres:14.0
+    container_name: backend2_lesson9_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "pricelist"
+      POSTGRES_USER: "gopher"
+      POSTGRES_PORT: "5432"
+    volumes:
+      - postgres:/data/postgres
+
+  migration:
+    build:
+      context: .
+      dockerfile: ./ops/migration/Dockerfile
+    container_name: backend2_lesson9_migration
+    environment:
+      POSTGRES_URL: "postgresql://gopher:password@postgres:5432/pricelist?sslmode=disable"
+    depends_on:
+      - postgres
+
+  pgadmin:
+    image: dpage/pgadmin4:6
+    container_name: backend2_lesson9_pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pgadmin4@pgadmin.org"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/root/.pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  postgres:
+  pgadmin:
