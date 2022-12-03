@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: develop
+    container_name: backend2_lesson8_app
+    environment:
+      ELASTICSEARCH_ADDRESSES: "http://elasticsearch:9200"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - .:/app
+
+  elasticsearch:
+    image: 'bitnami/elasticsearch:7.16.1'
+    container_name: backend2_lesson8_elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ELASTICSEARCH_PORT_NUMBER: "9200"
+      ELASTICSEARCH_NODE_PORT_NUMBER: "9300"
+    volumes:
+      - elasticsearch:/bitnami/elasticsearch/data
+
+volumes:
+  elasticsearch:
