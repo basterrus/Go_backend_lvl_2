@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package pricelist;
+option go_package = ".;proto";
+
+import "google/protobuf/timestamp.proto";
+
+service PriceListService {
+  rpc GetPriceList (GetPriceListRequest) returns (PriceList) {}
+  rpc CreatedPriceList (CreatePriceListRequest) returns (PriceList) {}
+  rpc UpdatePriceList (UpdatePriceListRequest) returns (PriceList) {}
+  rpc AddProductToPriceList (AddProductToPriceListRequest) returns (PriceList) {}
+  rpc RemoveProductFromPriceList (RemoveProductFromPriceListRequest) returns (PriceList) {}
+  rpc DeletePriceList (DeletePriceListRequest) returns (DeleteFromPriceListResponse) {}
+}
+
+message PriceList {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  repeated PriceListProduct product = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message PriceListProduct {
+  string id = 1;
+  string title = 2;
+  string price = 3;
+}
+
+message GetPriceListRequest {
+  string id = 1;
+}
+
+message CreatePriceListRequest {
+  string title = 1;
+  string description = 2;
+  repeated string product = 3;
+}
+
+message UpdatePriceListRequest {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  repeated string product = 4;
+}
+
+message AddProductToPriceListRequest {
+  string price_list_id = 1;
+  string product_id = 2;
+}
+
+message RemoveProductFromPriceListRequest {
+  string price_list_id = 1;
+  string product_id = 2;
+}
+
+message DeletePriceListRequest {
+  string id = 1;
+}
+
+message DeleteFromPriceListResponse {
+  bool deleted = 1;
+}
